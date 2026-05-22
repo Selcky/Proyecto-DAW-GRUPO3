@@ -3,98 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <title>Nuevo Curso</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/estilos.css">
+    <script src="../js/navegacion.js"></script>
 </head>
 <body class="bg-light">
 
-<div class="container mt-5">
+    <div class="container mt-5">
+        <div class="card shadow p-4" style="max-width: 600px; margin: 0 auto;">
+            <h2 class="mb-4 text-primary"> Crear Nuevo Curso</h2>
 
-    <div class="card shadow p-4">
+            <form id="formCurso">
+                <!-- Campo: Nombre del Curso -->
+                <label class="form-label fw-bold">Nombre del Curso</label>
+                <input 
+                    type="text" 
+                    id="nombre" 
+                    class="form-control mb-3" 
+                    placeholder="Ej: Programación Web"
+                    required>
 
-        <h2 class="text-primary mb-4">
-            Crear Curso
-        </h2>
+                <!-- Campo: Categoría -->
+                <label class="form-label fw-bold">Categoría</label>
+                <select id="categoria" class="form-select mb-3" required>
+                    <option value="">Seleccionar categoría</option>
+                    <option value="Tecnología">Tecnología</option>
+                    <option value="Negocios">Negocios</option>
+                    <option value="Diseño">Diseño</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Idiomas">Idiomas</option>
+                    <option value="Otros">Otros</option>
+                </select>
 
-        <form id="formCurso">
+                <!-- Campo: Docente -->
+                <label class="form-label fw-bold">Docente</label>
+                <input 
+                    type="text" 
+                    id="docente" 
+                    class="form-control mb-3" 
+                    placeholder="Ej: Ing. Juan Pérez"
+                    required>
 
-            <input
-                type="text"
-                id="nombre"
-                class="form-control mb-3"
-                placeholder="Nombre del Curso"
-                required
-            >
+                <!-- Campo: Descripción -->
+                <label class="form-label fw-bold">Descripción</label>
+                <textarea 
+                    id="descripcion" 
+                    class="form-control mb-3" 
+                    rows="4"
+                    placeholder="Escribe una descripción del curso"
+                    required></textarea>
 
-            <input
-                type="text"
-                id="categoria"
-                class="form-control mb-3"
-                placeholder="Categoría"
-                required
-            >
+                <!-- Campo: Duración (en horas) -->
+                <label class="form-label fw-bold">Duración (horas)</label>
+                <input 
+                    type="number" 
+                    id="duracion" 
+                    class="form-control mb-3" 
+                    placeholder="Ej: 40"
+                    min="1"
+                    required>
 
-            <input
-                type="text"
-                id="docente"
-                class="form-control mb-3"
-                placeholder="Docente"
-                required
-            >
+                <!-- Campo: Precio -->
+                <label class="form-label fw-bold">Precio ($)</label>
+                <input 
+                    type="number" 
+                    id="precio" 
+                    class="form-control mb-3" 
+                    placeholder="Ej: 99.99"
+                    min="0"
+                    step="0.01"
+                    required>
 
-            <button class="btn btn-success">
-                Guardar Curso
-            </button>
-
-            <a href="lista_cursos.html"
-               class="btn btn-secondary">
-                Cancelar
-            </a>
-
-        </form>
-
+                <!-- Botones -->
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success w-100">
+                         Guardar Curso
+                    </button>
+                    <a href="lista_cursos.html" class="btn btn-secondary w-100">
+                         Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
-</div>
+    <script>
+        // Obtener formulario
+        const formCurso = document.getElementById("formCurso");
 
-<script>
+        // Escuchar el evento submit
+        formCurso.addEventListener("submit", function(e){
+            e.preventDefault(); // Prevenir recarga de página
 
-document.getElementById("formCurso")
-.addEventListener("submit", function(e){
+            // Obtener valores del formulario
+            let nombre = document.getElementById("nombre").value;
+            let categoria = document.getElementById("categoria").value;
+            let docente = document.getElementById("docente").value;
+            let descripcion = document.getElementById("descripcion").value;
+            let duracion = document.getElementById("duracion").value;
+            let precio = document.getElementById("precio").value;
 
-    e.preventDefault();
+            // Obtener cursos existentes de localStorage
+            let cursos = JSON.parse(localStorage.getItem("cursos")) || [];
 
-    let nombre =
-    document.getElementById("nombre").value;
+            // Crear nuevo curso con ID automático
+            let nuevoCurso = {
+                id: Date.now(), // ID único basado en timestamp
+                nombre: nombre,
+                categoria: categoria,
+                docente: docente,
+                descripcion: descripcion,
+                duracion: duracion,
+                precio: precio,
+                fechaCreacion: new Date().toLocaleDateString('es-ES')
+            };
 
-    let categoria =
-    document.getElementById("categoria").value;
+            // Agregar nuevo curso al array
+            cursos.push(nuevoCurso);
 
-    let docente =
-    document.getElementById("docente").value;
+            // Guardar en localStorage
+            localStorage.setItem("cursos", JSON.stringify(cursos));
 
-    let cursos =
-    JSON.parse(localStorage.getItem("cursos")) || [];
+            // Mostrar mensaje de éxito
+            alert("Curso creado exitosamente");
 
-    cursos.push({
-        nombre,
-        categoria,
-        docente
-    });
-
-    localStorage.setItem(
-        "cursos",
-        JSON.stringify(cursos)
-    );
-
-    alert("Curso registrado");
-
-    window.location.href =
-    "lista_cursos.html";
-
-});
-
-</script>
-<script src="../js/navegacion.js"></script>
+            // Redirigir a lista de cursos
+            window.location.href = "lista_cursos.html";
+        });
+    </script>
+    <script src="js/cursos.js"></script>
 </body>
 </html>
