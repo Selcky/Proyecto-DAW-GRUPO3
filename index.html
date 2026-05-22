@@ -25,6 +25,13 @@
     
 
     <script>
+        // Protección: si ya hay sesión, ir al dashboard
+        let usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+        if (usuarioActivo) {
+            window.location.href = "dashboard.html";
+        }
+    </script>
+    <script>
         document.getElementById("loginForm")
         .addEventListener("submit", function(e){
             e.preventDefault();
