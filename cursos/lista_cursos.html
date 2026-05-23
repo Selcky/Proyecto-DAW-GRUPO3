@@ -2,88 +2,167 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Cursos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../css/estilos.css">
     <script src="../js/navegacion.js"></script>
 </head>
 <body class="bg-light">
 
-    <div class="container mt-5">
-        <!-- Botones de acción -->
-        <div class="d-flex justify-content-between mb-4">
-            <h2 class="text-primary">📚 Lista de Cursos</h2>
-            <a href="crear_curso.html" class="btn btn-success">
-                 Nuevo Curso
+    <div class="container-fluid mt-5 px-4">
+        
+        <!-- Encabezado con título -->
+        <div class="mb-4">
+            <h2 class="text-primary fw-bold">
+                <i class="bi bi-book"></i> Gestión de Cursos
+            </h2>
+            <p class="text-muted">Administra todos los cursos de la plataforma</p>
+        </div>
+
+        <!-- TARJETAS DE ESTADÍSTICAS -->
+        <div class="row mb-4">
+            <!-- Total de Cursos -->
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3">
+                            <i class="bi bi-book-half fs-2"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Total de Cursos</h6>
+                            <p class="display-6 fw-bold mb-0 text-primary" id="totalCursos">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cursos Activos -->
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 me-3">
+                            <i class="bi bi-check-circle fs-2"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Cursos Disponibles</h6>
+                            <p class="display-6 fw-bold mb-0 text-success" id="cursosActivos">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingresos Totales -->
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-3 me-3">
+                            <i class="bi bi-currency-dollar fs-2"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1">Ingresos Totales</h6>
+                            <p class="display-6 fw-bold mb-0 text-warning" id="ingresosTotales">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Nuevo Curso -->
+        <div class="mb-4">
+            <a href="crear_curso.html" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle"></i> Crear Nuevo Curso
             </a>
         </div>
 
-        <!-- Tabla de cursos -->
-        <div class="card shadow p-4">
-            <table class="table table-bordered table-hover" id="tablaCursos">
-                <thead class="table-primary">
+        <!-- TABLA DE CURSOS -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul"></i> Lista de Cursos
+                </h5>
+            </div>
+
+            <table class="table table-hover mb-0" id="tablaCursos">
+                <thead class="table-light">
                     <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th>Docente</th>
-                        <th>Duración</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
+                        <th><i class="bi bi-hash"></i> </th>
+                        <th><i class="bi bi-book"></i> Nombre</th>
+                        <th><i class="bi bi-folder"></i> Categoría</th>
+                        <th><i class="bi bi-person-badge"></i> Docente</th>
+                        <th><i class="bi bi-hourglass-split"></i> Duración</th>
+                        <th><i class="bi bi-tag"></i> Precio</th>
+                        <th><i class="bi bi-gear"></i> Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="bodyTabla">
-                    <!-- Los cursos se cargarán aquí con JavaScript -->
+                    <!-- Los cursos se cargarán aquí -->
                 </tbody>
             </table>
 
             <!-- Mensaje si no hay cursos -->
-            <div id="mensajeVacio" class="alert alert-info text-center" style="display: none;">
-                No hay cursos registrados. <a href="crear_curso.html">Crear uno ahora</a>
+            <div id="mensajeVacio" class="alert alert-info m-3" style="display: none;">
+                <i class="bi bi-inbox"></i> No hay cursos registrados. 
+                <a href="crear_curso.html" class="alert-link">Crear uno ahora</a>
             </div>
         </div>
     </div>
 
     <script>
-        // Cargar cursos al abrir la página
+        // Cargar y mostrar estadísticas
+        function actualizarEstadisticas() {
+            let cursos = JSON.parse(localStorage.getItem("cursos")) || [];
+            
+            let totalCursos = cursos.length;
+            let cursosActivos = cursos.length;
+            let ingresosTotales = cursos.reduce((total, curso) => total + parseFloat(curso.precio || 0), 0);
+
+            document.getElementById("totalCursos").textContent = totalCursos;
+            document.getElementById("cursosActivos").textContent = cursosActivos;
+            document.getElementById("ingresosTotales").textContent = '$' + ingresosTotales.toFixed(2);
+        }
+
+        // Cargar cursos en la tabla
         function cargarCursos() {
             let cursos = JSON.parse(localStorage.getItem("cursos")) || [];
             let bodyTabla = document.getElementById("bodyTabla");
             let mensajeVacio = document.getElementById("mensajeVacio");
 
-            // Limpiar tabla
             bodyTabla.innerHTML = "";
 
-            // Si no hay cursos
             if (cursos.length === 0) {
                 document.getElementById("tablaCursos").style.display = "none";
                 mensajeVacio.style.display = "block";
                 return;
             }
 
-            // Mostrar tabla
             document.getElementById("tablaCursos").style.display = "table";
             mensajeVacio.style.display = "none";
 
-            // Agregar cada curso a la tabla
             cursos.forEach((curso, index) => {
                 let fila = `
                     <tr>
-                        <td>${index + 1}</td>
+                        <td><strong>${index + 1}</strong></td>
                         <td><strong>${curso.nombre}</strong></td>
-                        <td><span class="badge bg-info">${curso.categoria}</span></td>
-                        <td>${curso.docente}</td>
-                        <td>${curso.duracion} hrs</td>
-                        <td>$${parseFloat(curso.precio).toFixed(2)}</td>
                         <td>
-                            <a href="detalle_curso.html?id=${curso.id}" class="btn btn-info btn-sm">
-                                👁️ Ver
+                            <span class="badge bg-light text-dark">
+                                <i class="bi bi-folder"></i> ${curso.categoria}
+                            </span>
+                        </td>
+                        <td>${curso.docente}</td>
+                        <td>
+                            <i class="bi bi-hourglass-split"></i> ${curso.duracion} hrs
+                        </td>
+                        <td>
+                            <strong class="text-success">$${parseFloat(curso.precio).toFixed(2)}</strong>
+                        </td>
+                        <td>
+                            <a href="editar_curso.html?id=${curso.id}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil-square"></i> Editar
                             </a>
-                            <a href="editar_curso.html?id=${curso.id}" class="btn btn-warning btn-sm">
-                                ✏️ Editar
-                            </a>
-                            <button onclick="eliminarCurso(${curso.id})" class="btn btn-danger btn-sm">
-                                🗑️ Eliminar
+                            <button onclick="eliminarCurso(${curso.id})" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar
                             </button>
                         </td>
                     </tr>
@@ -98,13 +177,19 @@
                 let cursos = JSON.parse(localStorage.getItem("cursos")) || [];
                 cursos = cursos.filter(c => c.id !== id);
                 localStorage.setItem("cursos", JSON.stringify(cursos));
-                alert(" Curso eliminado");
+                alert("Curso eliminado correctamente");
                 cargarCursos();
+                actualizarEstadisticas();
             }
         }
 
-        // Cargar cursos cuando la página inicia
-        document.addEventListener("DOMContentLoaded", cargarCursos);
+        // Cargar todo cuando la página inicia
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarCursos();
+            actualizarEstadisticas();
+        });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
