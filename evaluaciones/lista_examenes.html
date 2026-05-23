@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Título que aparece en la pestaña del navegador -->
+    <title>Lista de Exámenes</title>
+
+    <!-- Importación de Bootstrap para usar estilos prediseñados -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Archivo CSS personalizado del proyecto -->
+    <link rel="stylesheet" href="../css/estilos.css">
+</head>
+
+<body class="bg-light">
+
+<!-- Archivo JavaScript que carga la navegación del sistema -->
+<script src="../js/navegacion.js"></script>
+
+<!-- Contenedor principal de la página -->
+<div class="container mt-5">
+
+    <!-- Encabezado con el título de la página y el botón para crear un nuevo examen -->
+    <div class="d-flex justify-content-between mb-4">
+        <h2 class="text-primary">📝 Lista de Exámenes</h2>
+
+        <!-- Botón que redirige a la página para crear un examen -->
+        <a href="crear_examen.html" class="btn btn-success">Crear Examen</a>
+    </div>
+
+    <!-- Tarjeta donde se muestra la tabla de exámenes -->
+    <div class="card shadow p-4">
+
+        <!-- Tabla donde se listarán los exámenes guardados -->
+        <table class="table table-bordered table-hover">
+
+            <!-- Encabezado de la tabla -->
+            <thead class="table-primary">
+                <tr>
+                    <th>#</th>
+                    <th>Título</th>
+                    <th>Curso</th>
+                    <th>Tiempo</th>
+                    <th>Preguntas</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <!-- Cuerpo de la tabla donde JavaScript insertará los exámenes -->
+            <tbody id="tablaExamenes"></tbody>
+        </table>
+
+        <!-- Mensaje que se muestra cuando no hay exámenes creados -->
+        <div id="mensajeVacio" class="alert alert-info text-center" style="display:none;">
+            No hay exámenes creados.
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función que carga los exámenes guardados en localStorage y los muestra en la tabla
+    function cargarExamenes() {
+
+        // Obtiene los exámenes guardados en localStorage
+        // Si no existe información, se crea un arreglo vacío
+        let examenes = JSON.parse(localStorage.getItem("examenes")) || [];
+
+        // Obtiene el cuerpo de la tabla donde se mostrarán los exámenes
+        let tabla = document.getElementById("tablaExamenes");
+
+        // Obtiene el mensaje que aparece cuando no existen exámenes
+        let mensaje = document.getElementById("mensajeVacio");
+
+        // Limpia el contenido de la tabla antes de volver a cargar los datos
+        tabla.innerHTML = "";
+
+        // Si no hay exámenes guardados, muestra el mensaje informativo
+        if (examenes.length === 0) {
+            mensaje.style.display = "block";
+            return;
+        }
+
+        // Si sí existen exámenes, oculta el mensaje informativo
+        mensaje.style.display = "none";
+
+        // Recorre cada examen guardado
+        examenes.forEach((examen, index) => {
+
+            // Agrega una fila a la tabla por cada examen
+            tabla.innerHTML += `
+                <tr>
+                    <!-- Número del examen en la lista -->
+                    <td>${index + 1}</td>
+
+                    <!-- Título del examen -->
+                    <td>${examen.titulo}</td>
+
+                    <!-- Curso al que pertenece el examen -->
+                    <td>${examen.curso}</td>
+
+                    <!-- Tiempo límite del examen -->
+                    <td>${examen.tiempo} minutos</td>
+
+                    <!-- Cantidad de preguntas que tiene el examen -->
+                    <td>${examen.preguntas.length}</td>
+
+                    <!-- Botones de acción para ver, editar o eliminar -->
+                    <td>
+                        <!-- Redirige a la página de detalle del examen enviando el ID por la URL -->
+                        <a href="detalle_examen.html?id=${examen.id}" class="btn btn-info btn-sm">Ver</a>
+
+                        <!-- Redirige a la página de edición del examen enviando el ID por la URL -->
+                        <a href="editar_examen.html?id=${examen.id}" class="btn btn-warning btn-sm">Editar</a>
+
+                        <!-- Ejecuta la función para eliminar el examen -->
+                        <button onclick="eliminarExamen(${examen.id})" class="btn btn-danger btn-sm">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // Función para eliminar un examen según su ID
+    function eliminarExamen(id) {
+
+        // Muestra una ventana de confirmación antes de eliminar
+        if (confirm("¿Desea eliminar este examen?")) {
+
+            // Obtiene nuevamente los exámenes guardados en localStorage
+            let examenes = JSON.parse(localStorage.getItem("examenes")) || [];
+
+            // Filtra los exámenes y elimina el que tenga el ID recibido
+            examenes = examenes.filter(e => e.id !== id);
+
+            // Guarda nuevamente la lista actualizada en localStorage
+            localStorage.setItem("examenes", JSON.stringify(examenes));
+
+            // Vuelve a cargar la tabla con los datos actualizados
+            cargarExamenes();
+        }
+    }
+
+    // Ejecuta la función cargarExamenes cuando la página termina de cargar
+    document.addEventListener("DOMContentLoaded", cargarExamenes);
+</script>
+
+</body>
+</html>
