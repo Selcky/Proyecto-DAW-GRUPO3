@@ -26,7 +26,7 @@
         <h2 class="text-primary">📝 Lista de Exámenes</h2>
 
         <!-- Botón que redirige a la página para crear un examen -->
-        <a href="crear_examen.html" class="btn btn-success">Crear Examen</a>
+        <a href="crear_examen.html" class="btn btn-success" id="btnCrearExamen">Crear Examen</a>
     </div>
 
     <!-- Tarjeta donde se muestra la tabla de exámenes -->
@@ -143,6 +143,13 @@
 
     // Ejecuta la función cargarExamenes cuando la página termina de cargar
     document.addEventListener("DOMContentLoaded", cargarExamenes);
+
+    let usuario = JSON.parse(localStorage.getItem("usuarioActivo"));
+
+    if(usuario.rol === "Alumno"){
+        document.getElementById("btnCrearExamen")
+        .style.display = "none";
+    }
 </script>
 
 </body>

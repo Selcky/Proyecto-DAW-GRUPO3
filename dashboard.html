@@ -19,7 +19,7 @@
             <hr>
             
             <div class="row mt-4">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-4 mb-3" id="cardUsuarios">
                     <div class="card border-primary h-100">
                         <div class="card-body text-center">
                             <h5 class="card-title text-primary">👥 Gestionar Usuarios</h5>
@@ -66,12 +66,20 @@
     <script>
         let usuario = JSON.parse(localStorage.getItem("usuarioActivo"));
 
+        //Si no hay Sesión
         if(!usuario){
             window.location.href = "index.html";
         }
 
         document.getElementById("saludo").innerHTML =
         "¡Hola, " + usuario.nombre + "! 👋";
+
+        if (usuario.rol !== "Admin") {
+            document.getElementById("cardUsuarios")
+            .style.display ="none";
+
+            
+        }
     </script>
 </body>
 </html>

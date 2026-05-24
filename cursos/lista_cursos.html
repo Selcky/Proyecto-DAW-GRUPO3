@@ -71,7 +71,7 @@
 
         <!-- Botón Nuevo Curso -->
         <div class="mb-4">
-            <a href="crear_curso.html" class="btn btn-success btn-lg">
+            <a href="crear_curso.html" class="btn btn-success btn-lg" id="btnCrearCurso">
                 <i class="bi bi-plus-circle"></i> Crear Nuevo Curso
             </a>
         </div>
@@ -158,10 +158,10 @@
                             <strong class="text-success">$${parseFloat(curso.precio).toFixed(2)}</strong>
                         </td>
                         <td>
-                            <a href="editar_curso.html?id=${curso.id}" class="btn btn-sm btn-warning">
+                            <a href="editar_curso.html?id=${curso.id}" class="btn btn-sm btn-warning btnEditar">
                                 <i class="bi bi-pencil-square"></i> Editar
                             </a>
-                            <button onclick="eliminarCurso(${curso.id})" class="btn btn-sm btn-danger">
+                            <button onclick="eliminarCurso(${curso.id})" class="btn btn-sm btn-danger btnEliminar">
                                 <i class="bi bi-trash"></i> Eliminar
                             </button>
                         </td>
@@ -187,6 +187,24 @@
         document.addEventListener("DOMContentLoaded", () => {
             cargarCursos();
             actualizarEstadisticas();
+
+            let usuario = JSON.parse(localStorage.getItem("usuarioActivo"));
+
+            if(usuario.rol === "Alumno"){
+                document.getElementById("btnCrearCurso")
+                .style.display = "none";
+
+                //Ocultar acciones
+                document.querySelectorAll(".btnEditar")
+                .forEach(boton => {
+                    boton.style.display = "none";
+                });
+
+                document.querySelectorAll(".btnEliminar")
+                .forEach(boton => {
+                    boton.style.display = "none";
+                });
+            }
         });
     </script>
 

@@ -13,7 +13,7 @@ class SistemaNavegacion {
             <span class="text-light me-3">Bienvenido: <strong>${this.usuario?.nombre || 'Invitado'}</strong></span>
             <a href="${this.obtenerRutaRelativa()}usuarios/lista_usuarios.html" class="btn btn-light btn-sm">👥 Usuarios</a>
             <a href="${this.obtenerRutaRelativa()}cursos/lista_cursos.html" class="btn btn-success btn-sm">📚 Cursos</a>
-            <a href="${this.obtenerRutaRelativa()}dashboard.html" class="btn btn-info btn-sm">🏠 Dashboard</a>
+            <a href="${this.obtenerRutaRelativa()}../dashboard.html" class="btn btn-info btn-sm">🏠 Dashboard</a>
             <button onclick="cerrarSesion()" class="btn btn-danger btn-sm">Cerrar Sesión</button>
           </div>
         </div>
